@@ -1,11 +1,9 @@
 # coding: utf-8
 
-from IPython.display import display #from IPython.core.display import HTML
 import math
 import logging
-import sys, os
 import pandas as pd
-pd.set_option('display.mpl_style', 'default') #Make the graphs a bit prettier
+pd.set_option('display.mpl_style', 'default')  # Make the graphs a bit prettier
 
 #Definindo loggers
 # logging.basicConfig(filename='rotina_1977.log', level=logging.DEBUG)
@@ -53,11 +51,11 @@ def consulta_refext(row, ext_data_frame, name_col_ref, name_col_filt, name_col_s
         return 999
 
 
-def verifica_DUMMY(data_frame, nome_variavel):
+def verifica_dummy(data_frame, nome_variavel):
     """
     Verifica se uma variável, dummy, contém algum valor diferente de 0 ou de 1.
         Uso:
-        verifica_DUMMY(nome_do_dataframe, 'coluna a ser verificada')
+        verifica_dummy(nome_do_dataframe, 'coluna a ser verificada')
     """
     contador_de_erros = 0
     log_verificador.info(nome_variavel + ': \n')
@@ -78,12 +76,12 @@ def verifica_DUMMY(data_frame, nome_variavel):
     log_verificador.info(nome_variavel + ": Total de erros encontrados: " + str(contador_de_erros) + '\n')
 
 
-def verifica_RANGE(df, variavel, valor_menor, valor_maior):
+def verifica_range(df, variavel, valor_menor, valor_maior):
     """
     Verifica se uma variável, do tipo número inteiro,
     contém algum valor menor que "valor_menor" ou maior que "valor_maior"
         Uso:
-        verifica_RANGE(nome_do_dataframe, 'coluna a ser verificada', 'valor_menor', 'valor_maior')
+        verifica_range(nome_do_dataframe, 'coluna a ser verificada', 'valor_menor', 'valor_maior')
     """
     log_acompanhamento.info(variavel + ': Verificando range da variável.')
     log_verificador.info('\n')
@@ -96,11 +94,11 @@ def verifica_RANGE(df, variavel, valor_menor, valor_maior):
     log_verificador.info(variavel + ': Descição da variável: \n' + str(df[variavel].describe()))
 
     result = df[variavel].value_counts().sort_index()
-    if result.first_valid_index() < valor_menor:
-        log_verificador.warn(variavel + ": Valor inteiro mínimo: " + str(result.first_valid_index()))
-    else:
-        log_verificador.info(variavel + ": Valor inteiro mínimo: " +
+    if result.first_valid_index() <= valor_menor:
+        log_verificador.warn(variavel + ": Valor inteiro mínimo: " +
                              str(result.first_valid_index()) + " - abaixo do esperado!")
+    else:
+        log_verificador.info(variavel + ": Valor inteiro mínimo: " + str(result.first_valid_index()))
     if result.last_valid_index() > valor_maior:
         log_verificador.warn(variavel + ": Valor inteiro máximo: " +
                              str(result.last_valid_index()) + " - acima do esperado!")
@@ -110,6 +108,7 @@ def verifica_RANGE(df, variavel, valor_menor, valor_maior):
 
     df_filtrado = df[(df[variavel] < valor_menor) | (df[variavel] > valor_maior)]
     valores_incorretos = df_filtrado[variavel].value_counts()
+
     if len(valores_incorretos) > 0:
         log_acompanhamento.warn(variavel + ': ' + str(len(valores_incorretos)) +
                                 ' Valor(es) incorreto(s) encontrado(s) nesta variável:')
@@ -193,7 +192,7 @@ def passo_zona_dom(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - ZONA_DOM")
 
     # Verifying value interval for check - conditions: "ZONA_DOM < 1" and "ZONA_DOM > 243"
-    verifica_RANGE(df, 'ZONA_DOM', 1, 243)
+    verifica_range(df, 'ZONA_DOM', 1, 243)
 
 
 def passo_subzona_dom(passo, df):
@@ -211,7 +210,7 @@ def passo_subzona_dom(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_DOM")
 
     # Verifying value interval for check - conditions: "SUBZONA_DOM < 1" and "SUBZONA_DOM > 633"
-    verifica_RANGE(df, 'SUBZONA_DOM', 1, 633)
+    verifica_range(df, 'SUBZONA_DOM', 1, 633)
 
 
 def passo_mun_dom(passo, df):
@@ -229,7 +228,7 @@ def passo_mun_dom(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - MUN_DOM")
 
     # Verifying value interval for check - conditions: "MUN_DOM < 1" and "MUN_DOM > 27"
-    verifica_RANGE(df, 'MUN_DOM', 1, 27)
+    verifica_range(df, 'MUN_DOM', 1, 27)
 
 
 def passo_f_dom(passo, df):
@@ -250,7 +249,7 @@ def passo_f_dom(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - F_DOM")
 
     # Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'F_DOM')
+    verifica_dummy(df, 'F_DOM')
 
 
 def passo_fe_dom(passo, df):
@@ -284,7 +283,7 @@ def passo_tipo_dom(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - TIPO_DOM")
 
     # Verifying value interval for check - conditions: "TIPO_DOM < 0" and "TIPO_DOM > 2"
-    verifica_RANGE(df, 'TIPO_DOM', 0, 2)
+    verifica_range(df, 'TIPO_DOM', 0, 2)
 
 
 # -----
@@ -319,7 +318,7 @@ def passo_f_fam(passo, df):
     """
     log_acompanhamento.info("### PASSO " + str(passo) + " - F_FAM")
     #Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'F_FAM')
+    verifica_dummy(df, 'F_FAM')
 
 
 def passo_fe_fam(passo, df):
@@ -381,7 +380,7 @@ def passo_cond_mora(passo, df):
     df.loc[df['COND_MORA']==0,'COND_MORA'] = 4
 
     # Verifying value interval for check - conditions: "COND_MORA < 1" and "COND_MORA > 4"
-    verifica_RANGE(df, 'COND_MORA', 1, 4)
+    verifica_range(df, 'COND_MORA', 1, 4)
 
     return df
 
@@ -465,7 +464,7 @@ def passo_f_pess(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - F_PESS")
 
     #Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'F_PESS')
+    verifica_dummy(df, 'F_PESS')
 
 
 def passo_fe_pess(passo, df):
@@ -524,7 +523,7 @@ def passo_sit_fam(passo, df):
     df.loc[df['SIT_FAM']==7,'SIT_FAM'] = 6
 
     # Verifying value interval for check - conditions: "SIT_FAM < 1" and "SIT_FAM > 6"
-    verifica_RANGE(df, 'SIT_FAM', 1, 6)
+    verifica_range(df, 'SIT_FAM', 1, 6)
 
     return df
 
@@ -572,7 +571,7 @@ def passo_sexo(passo, df):
     df.loc[df['SEXO']==2,'SEXO'] = 0
 
     # Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'SEXO')
+    verifica_dummy(df, 'SEXO')
 
     return df
 
@@ -640,7 +639,7 @@ def passo_grau_instr(passo, df):
     df.loc[df['GRAU_INSTR']==9,'GRAU_INSTR'] = 4
 
     # Verifying value interval for check - conditions: "GRAU_INSTR < 1" and "GRAU_INSTR > 4"
-    verifica_RANGE(df, 'GRAU_INSTR', 1, 4)
+    verifica_range(df, 'GRAU_INSTR', 1, 4)
 
     return df
 
@@ -706,7 +705,7 @@ def passo_ocup(passo, df):
     df.loc[df['OCUP']>7,'OCUP'] = 1
 
     # Verifying value interval for check - conditions: "OCUP < 1" and "OCUP > 7"
-    verifica_RANGE(df, 'OCUP', 1, 7)
+    verifica_range(df, 'OCUP', 1, 7)
 
     return df
 
@@ -730,7 +729,7 @@ def passo_cd_renind(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - CD_RENIND")
 
     # Verifying value interval for check - conditions: "CD_RENIND < 1" and "CD_RENIND > 3"
-    verifica_RANGE(df, 'CD_RENIND', 1, 3)
+    verifica_range(df, 'CD_RENIND', 1, 3)
 
 
 def passo_ren_ind(passo, df):
@@ -759,7 +758,7 @@ def passo_zona_esc(passo, df):
 
     # Verifying value interval for check - conditions: "ZONA_ESC < 1" and "ZONA_ESC > 243"
     # The 'error' returns must be related to "ZONA_ESC" == 0, that is, trips that are not school purposed
-    verifica_RANGE(df, 'ZONA_ESC', 1, 243)
+    verifica_range(df, 'ZONA_ESC', 1, 243)
 
 
 def passo_subzona_esc(passo, df):
@@ -777,7 +776,7 @@ def passo_subzona_esc(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_ESC")
 
     # Verifying value interval for check - conditions: "SUBZONA_ESC < 1" and "SUBZONA_ESC > 633"
-    verifica_RANGE(df, 'SUBZONA_ESC', 1, 633)
+    verifica_range(df, 'SUBZONA_ESC', 1, 633)
 
 
 def passo_mun_esc(passo, df):
@@ -796,7 +795,7 @@ def passo_mun_esc(passo, df):
 
     # Verifying value interval for check - conditions: "MUN_ESC < 1" and "MUN_ESC > 27"
     # The 'error' returns must be related to "MUN_ESC" == 0, that is, trips that are not school purposed
-    verifica_RANGE(df, 'MUN_ESC', 1, 27)
+    verifica_range(df, 'MUN_ESC', 1, 27)
 
 
 def passo_zona_trab1(passo, df):
@@ -815,7 +814,7 @@ def passo_zona_trab1(passo, df):
 
     # Verifying value interval for check - conditions: "ZONA_TRAB1 < 1" and "ZONA_TRAB1 > 243"
     # The 'error' returns must be related to "ZONA_TRAB1"==0, that is, trips that are not work purposed
-    verifica_RANGE(df, 'ZONA_TRAB1', 1, 243)
+    verifica_range(df, 'ZONA_TRAB1', 1, 243)
 
 
 def passo_subzona_trab1(passo, df):
@@ -833,7 +832,7 @@ def passo_subzona_trab1(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_TRAB1")
 
     # Verifying value interval for check - conditions: "SUBZONA_TRAB1 < 1" and "SUBZONA_TRAB1 > 633"
-    verifica_RANGE(df, 'SUBZONA_TRAB1', 1, 633)
+    verifica_range(df, 'SUBZONA_TRAB1', 1, 633)
 
 
 def passo_mun_trab1(passo, df):
@@ -852,7 +851,7 @@ def passo_mun_trab1(passo, df):
 
     # Verifying value interval for check - conditions: "MUN_TRAB1 < 1" ou de "MUN_TRAB1 > 27"
     # The 'error' returns must be related to "MUN_TRAB1" == 0, that is, trips that are not work purposed
-    verifica_RANGE(df, 'MUN_TRAB1', 1, 27)
+    verifica_range(df, 'MUN_TRAB1', 1, 27)
 
 
 def passo_zona_trab2(passo, df):
@@ -871,7 +870,7 @@ def passo_zona_trab2(passo, df):
 
     # Verifying value interval for check - conditions: "ZONA_TRAB2 < 1" and "ZONA_TRAB2 > 243
     # The 'error' returns must be related to "ZONA_TRAB2"==0, that is, trips that are not work purposed
-    verifica_RANGE(df, 'ZONA_TRAB2', 1, 243)
+    verifica_range(df, 'ZONA_TRAB2', 1, 243)
 
 
 def passo_subzona_trab2(passo, df):
@@ -889,7 +888,7 @@ def passo_subzona_trab2(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_TRAB2")
 
     # Verifying value interval for check - conditions: "SUBZONA_TRAB2 < 1" and "SUBZONA_TRAB2 > 633"
-    verifica_RANGE(df, 'SUBZONA_TRAB2', 1, 633)
+    verifica_range(df, 'SUBZONA_TRAB2', 1, 633)
 
 
 def passo_mun_trab2(passo, df):
@@ -908,7 +907,7 @@ def passo_mun_trab2(passo, df):
 
     # Verifying value interval for check - conditions: "MUN_TRAB2 < 1" ou de "MUN_TRAB2 > 27"
     # The 'error' returns must be related to "MUN_TRAB2" == 0, that is, trips that are not work purposed
-    verifica_RANGE(df, 'MUN_TRAB2', 1, 27)
+    verifica_range(df, 'MUN_TRAB2', 1, 27)
 
 
 # -----
@@ -959,7 +958,7 @@ def passo_zona_orig(passo, df):
 
     #Verifying value interval for check - conditions: "ZONA_ORIG < 1" and "ZONA_ORIG > 243"
     #The 'error' returns must be related to "ZONA_ORIG"==0, that is, trips that were not made
-    verifica_RANGE(df, 'ZONA_ORIG', 1, 243)
+    verifica_range(df, 'ZONA_ORIG', 1, 243)
 
 
 def passo_subzona_orig(passo, df):
@@ -977,7 +976,7 @@ def passo_subzona_orig(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_ORIG")
 
     #Verifying value interval for check - conditions: "SUBZONA_ORIG < 1" and "SUBZONA_ORIG > 633"
-    verifica_RANGE(df, 'SUBZONA_ORIG', 1, 633)
+    verifica_range(df, 'SUBZONA_ORIG', 1, 633)
 
 
 def passo_mun_orig(passo, df):
@@ -996,7 +995,7 @@ def passo_mun_orig(passo, df):
 
     #Verifying value interval for check - conditions: "MUN_ORIG < 1" ou de "MUN_ORIG > 27"
     #The 'error' returns must be related to "MUN_ORIG" == 0, that is, trips that were not made
-    verifica_RANGE(df, 'MUN_ORIG', 1, 27)
+    verifica_range(df, 'MUN_ORIG', 1, 27)
 
 
 def passo_zona_dest(passo, df):
@@ -1015,7 +1014,7 @@ def passo_zona_dest(passo, df):
 
     #Verifying value interval for check - conditions: "ZONA_DEST < 1" and "ZONA_DEST > 243"
     #The 'error' returns must be related to "ZONA_DEST"==0, that is, trips that are not school purposed
-    verifica_RANGE(df, 'ZONA_DEST', 1, 243)
+    verifica_range(df, 'ZONA_DEST', 1, 243)
 
 
 def passo_subzona_dest(passo, df):
@@ -1033,7 +1032,7 @@ def passo_subzona_dest(passo, df):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SUBZONA_DEST")
 
     #Verifying value interval for check - conditions: "SUBZONA_DEST < 1" and "SUBZONA_DEST > 633"
-    verifica_RANGE(df, 'SUBZONA_DEST', 1, 633)
+    verifica_range(df, 'SUBZONA_DEST', 1, 633)
 
 
 def passo_mun_dest(passo, df):
@@ -1052,7 +1051,7 @@ def passo_mun_dest(passo, df):
 
     #Verifying value interval for check - conditions: "MUN_DEST < 1" ou de "MUN_DEST > 27"
     #The 'error' returns must be related to "MUN_DEST" == 0, that is, trips that were not made
-    verifica_RANGE(df, 'MUN_DEST', 1, 27)
+    verifica_range(df, 'MUN_DEST', 1, 27)
 
 
 def passo_motivo_orig(passo, df):
@@ -1113,7 +1112,7 @@ def passo_motivo_orig(passo, df):
     df.loc[df['MOTIVO_ORIG']==11,'MOTIVO_ORIG'] = 9
 
     #Verifying value interval for check - conditions: "MOTIVO_ORIG < 0" and "MOTIVO_ORIG > 9"
-    verifica_RANGE(df, 'MOTIVO_ORIG', 0, 9)
+    verifica_range(df, 'MOTIVO_ORIG', 0, 9)
 
     return df
 
@@ -1175,7 +1174,7 @@ def passo_motivo_dest(passo, df):
     df.loc[df['MOTIVO_DEST']==11,'MOTIVO_DEST'] = 9
 
     #Verifying value interval for check - conditions: "MOTIVO_DEST < 0" and "MOTIVO_DEST > 9"
-    verifica_RANGE(df, 'MOTIVO_DEST', 0, 9)
+    verifica_range(df, 'MOTIVO_DEST', 0, 9)
 
     return df
 
@@ -1227,7 +1226,7 @@ def passo_modo1(passo, df):
     log_verificador.info("MODO1: Situação inicial dos dados: \n" + str(df['MODO1'].value_counts()))
 
     #Verifying value interval for check - conditions: "MODO1 < 0" and "MODO1 > 12"
-    verifica_RANGE(df, 'MODO1', 0, 12)
+    verifica_range(df, 'MODO1', 0, 12)
 
 
 def passo_modo2(passo, df):
@@ -1277,7 +1276,7 @@ def passo_modo2(passo, df):
     log_verificador.info("MODO2: Situação inicial dos dados: \n" + str(df['MODO2'].value_counts()))
 
     #Verifying value interval for check - conditions: "MODO2 < 0" and "MODO2 > 12"
-    verifica_RANGE(df, 'MODO2', 0, 12)
+    verifica_range(df, 'MODO2', 0, 12)
 
 def passo_modo3(passo, df):
     """
@@ -1326,7 +1325,7 @@ def passo_modo3(passo, df):
     log_verificador.info("MODO3: Situação inicial dos dados: \n" + str(df['MODO3'].value_counts()))
 
     #Verifying value interval for check - conditions: "MODO3 < 0" and "MODO3 > 12"
-    verifica_RANGE(df, 'MODO3', 0, 12)
+    verifica_range(df, 'MODO3', 0, 12)
 
 def passo_modo4(passo, df):
     """
@@ -1387,7 +1386,7 @@ def passo_modo_prin(passo, df):
     log_verificador.info("MODO_PRIN: Situação inicial dos dados: \n" + str(df['MODO_PRIN'].value_counts()))
 
     #Verifying value interval for check - conditions: "MODO_PRIN < 0" and "MODO_PRIN > 12"
-    verifica_RANGE(df, 'MODO_PRIN', 0, 12)
+    verifica_range(df, 'MODO_PRIN', 0, 12)
 
 
 def passo_tipo_est_auto(passo, df):
@@ -1444,7 +1443,7 @@ def passo_tipo_est_auto(passo, df):
     df.loc[df['TIPO_EST_AUTO']==7,'TIPO_EST_AUTO'] = 1
 
     #Verifying value interval for check - conditions: "TIPO_EST_AUTO < 0" and "TIPO_EST_AUTO > 5"
-    verifica_RANGE(df, 'TIPO_EST_AUTO', 0, 5)
+    verifica_range(df, 'TIPO_EST_AUTO', 0, 5)
 
     return df
 
@@ -1498,12 +1497,11 @@ def passo_setor_ativ(passo, df, df_setor):
     log_acompanhamento.info("### PASSO " + str(passo) + " - SETOR_ATIV")
 
     log_verificador.info("SETOR_ATIV: Situação inicial dos dados: \n" + str(df['SETOR_ATIV'].value_counts()))
-
     # Getting from the csv file the "CD_UNIF" (unified code for activity sector) correspondent to the "SETOR_ATIV" code
     df['SETOR_ATIV'] = df.apply(lambda row: consulta_refext(row, df_setor, 'COD', 'SETOR_ATIV', 'COD_UNIF'), axis=1)
 
     # Verifying value interval for check - conditions: "SETOR_ATIV < 0" and "SETOR_ATIV > 10"
-    verifica_RANGE(df, 'SETOR_ATIV', 0, 10)
+    verifica_range(df, 'SETOR_ATIV', 0, 10)
 
     return df
 
@@ -1532,7 +1530,7 @@ def passo_ucod(passo, df, ucod, tipo_ucod):
     df['UCOD_' + tipo_ucod] = df.apply(lambda row: consulta_refext(row, ucod, 'Zona 1977', 'ZONA_' + tipo_ucod, 'UCOD'), axis=1)
 
     # Verifying value interval for check - conditions: "UCOD_XXX < 1" and "UCOD_XXX > 67"
-    verifica_RANGE(df, 'UCOD_' + tipo_ucod, 1, 67)
+    verifica_range(df, 'UCOD_' + tipo_ucod, 1, 67)
 
     return df
 
@@ -1894,11 +1892,14 @@ def passo_tot_viag(passo, df):
     #df[:30][['ID_PESS','NO_VIAG','TOT_VIAG']]
 
     def atrib_tot_viag(row):
-        df.loc[df['ID_PESS']==row['ID_PESS'],'TOT_VIAG'] = row['NO_VIAG']
+        df.loc[df['ID_PESS'] == row['ID_PESS'],'TOT_VIAG'] = row['NO_VIAG']
         # print('id_pessoa: ' + str(row['ID_PESS']) + ' | no_viag:' + str(row['NO_VIAG'])
         # print(row)
 
-    df.loc[:,['ID_PESS','NO_VIAG']].groupby(['ID_PESS'],sort=False).agg({'NO_VIAG':max,'ID_PESS':max}).apply(atrib_tot_viag, axis=1)
+    df.loc[:, ['ID_PESS', 'NO_VIAG']]\
+        .groupby(['ID_PESS'], sort=False)\
+        .agg({'NO_VIAG': max, 'ID_PESS': max})\
+        .apply(atrib_tot_viag, axis=1)
     # od1977[od1977['ID_PESS']==20002030404][['ID_PESS','NO_VIAG']]
 
     #display(od1977.loc[:90,['ID_PESS','NO_VIAG','TOT_VIAG']])
@@ -1913,7 +1914,10 @@ def passo_tot_viag(passo, df):
         if row['NO_VIAG'] != row['TOT_VIAG']:
             log_verificador.warn('TOT_VIAG: Erro encontrado na linha\n' + str(row) + '\n\n')
             #print(row)
-    df.loc[:,['ID_PESS','NO_VIAG','TOT_VIAG']].groupby('ID_PESS').agg({'NO_VIAG':'max','ID_PESS':'max','TOT_VIAG':'max'}).apply(verifica_no_viag_tot_viag, axis=1)
+    df.loc[:, ['ID_PESS', 'NO_VIAG', 'TOT_VIAG']]\
+        .groupby('ID_PESS')\
+        .agg({'NO_VIAG': 'max', 'ID_PESS': 'max', 'TOT_VIAG': 'max'})\
+        .apply(verifica_no_viag_tot_viag, axis=1)
 
     return df
 
@@ -1949,7 +1953,7 @@ def passo_cd_entre(passo, df):
     df.loc[df['TOT_VIAG'] != 0, 'CD_ENTRE'] = 1
 
     # Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'CD_ENTRE')
+    verifica_dummy(df, 'CD_ENTRE')
 
     return df
 
@@ -2004,7 +2008,7 @@ def passo_cd_renfam(passo, df):
     df.apply(melhora_cd_renfam, axis=1)
 
     # Verifying value interval for check - conditions: "CD_RENFAM < 0" and "CD_RENFAM > 2"
-    verifica_RANGE(df, 'CD_RENFAM', 0, 2)
+    verifica_range(df, 'CD_RENFAM', 0, 2)
 
     return df
 
@@ -2034,7 +2038,7 @@ def passo_estuda(passo, df):
     df.loc[df['ZONA_ESC'] == 0, 'ESTUDA'] = 0
 
     # Verifying if there was left some value other than 0 or 1
-    verifica_DUMMY(df, 'ESTUDA')
+    verifica_dummy(df, 'ESTUDA')
 
     return df
 
@@ -2086,7 +2090,7 @@ def main():
 
     # Filtering the dataframe to get a smaller sample
     # logging.info('\nFiltering the main dataframe to get just a sample')
-    od1977 = od1977[:20000]
+    od1977 = od1977[:5000]
 
     log_acompanhamento.info('\nBasic column creation or rename on the main dataframe')
     # Renaming the column UCOD to UCOD_DOM
