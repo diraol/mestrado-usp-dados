@@ -11,13 +11,13 @@ pd.set_option('display.mpl_style', 'default')  # Make the graphs a bit prettier
 log_formatter = logging.Formatter('%(levelname)s: %(message)s')
 
 log_verificador = logging.getLogger('log_verificador')
-FH_verificador = logging.FileHandler('1977_verificador.log')
+FH_verificador = logging.FileHandler('logs/1977_verificador.log')
 FH_verificador.setFormatter(log_formatter)
 log_verificador.setLevel(logging.INFO)
 log_verificador.addHandler(FH_verificador)
 
 log_acompanhamento = logging.getLogger('log_acompanhamento')
-FH_acompanhamento = logging.FileHandler('1977_acompanhamento.log')
+FH_acompanhamento = logging.FileHandler('logs/1977_acompanhamento.log')
 FH_acompanhamento.setFormatter(log_formatter)
 log_acompanhamento.setLevel(logging.INFO)
 log_acompanhamento.addHandler(FH_acompanhamento)
@@ -2081,12 +2081,12 @@ def main():
     log_acompanhamento.info('\nReading csv files and generating dataframes')
 
     # Reading csv file and store its contend in an intern dataframe
-    od1977 = pd.read_csv('OD_1977.csv', sep=';', decimal=',')
+    od1977 = pd.read_csv('bases/OD_1977.csv.bz2', sep=';', decimal=',')
 
     # Reading other accessory files that will be used on the consulta_refext function
-    ucod1977 = pd.read_csv('UCOD-1977.csv', sep=';')
-    setor_ativ1977 = pd.read_csv('setor_ativ-1977.csv', sep=';')
-    coord_subzona1977 = pd.read_csv('coord_subzonas_1987.csv', sep=';')
+    ucod1977 = pd.read_csv('bases/UCOD-1977.csv.bz2', sep=';')
+    setor_ativ1977 = pd.read_csv('bases/setor_ativ-1977.csv.bz2', sep=';')
+    coord_subzona1977 = pd.read_csv('bases/coord_subzonas_1987.csv.bz2', sep=';')
 
     # Filtering the dataframe to get a smaller sample
     # logging.info('\nFiltering the main dataframe to get just a sample')
